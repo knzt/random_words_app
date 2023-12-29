@@ -2,6 +2,8 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'app_theme.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -15,17 +17,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Random Words App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.light(
-            primary: Color(0xFF18304C),
-            onPrimary: Color(0xFFFFFFFF),
-            background: Color(0xF2F2F2F2),
-            secondary: Color(0xFFFFCBCB),
-            onSecondary: Color(0xFFff914d),
-            secondaryContainer: Color(0xFF142841),
-          ),
-        ),
+        theme: themeData,
         home: MyHomePage(),
       ),
     );
@@ -48,6 +40,11 @@ class MyAppState extends ChangeNotifier {
     } else {
       favorites.add(current);
     }
+    notifyListeners();
+  }
+
+  void undoRemoveFavorite(WordPair removedPair) {
+    favorites.add(removedPair);
     notifyListeners();
   }
 }
@@ -127,7 +124,8 @@ class FavoritesPage extends StatelessWidget {
 
     if (appState.favorites.isEmpty) {
       return Center(
-        child: Text('No favorites yet.'),
+        child: Text('No favorites yet.',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
       );
     }
 
@@ -135,13 +133,64 @@ class FavoritesPage extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
+          child: Center(
+            child: Text(
+              'You have ${appState.favorites.length} favorites:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
         ),
         for (var pair in appState.favorites)
           ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
+            contentPadding: EdgeInsets.symmetric(horizontal: 40),
+            leading: Icon(
+              Icons.delete,
+              color: Theme.of(context).colorScheme.tertiary,
+              size: 28,
+            ),
+            onTap: () {
+              appState.toggleFavorite();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  content: Row(
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Removed ${pair.asLowerCase} from favorites.',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    onPressed: () {
+                      appState.undoRemoveFavorite(pair);
+                    },
+                    textColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              );
+            },
+            title: Text(
+              pair.asLowerCase,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
       ],
     );
