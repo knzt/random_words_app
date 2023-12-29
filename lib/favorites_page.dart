@@ -49,7 +49,7 @@ class FavoritesPage extends StatelessWidget {
                         Icons.delete,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: 4),
                       Text(
                         'Removed ${pair.asLowerCase} from favorites.',
                         style: TextStyle(

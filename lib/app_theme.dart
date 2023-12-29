@@ -10,4 +10,5 @@ final ThemeData themeData = ThemeData(
     secondaryContainer: Color(0xFF142841),
     tertiary: Color(0xFFff5e4d),
   ),
+  fontFamily: 'Kodchasan',
 );

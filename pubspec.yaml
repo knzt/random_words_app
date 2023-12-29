@@ -23,3 +23,16 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Kodchasan
+      fonts:
+        - asset: fonts/Kodchasan-Regular.ttf
+        - asset: fonts/Kodchasan-Bold.ttf
+          weight: 700
+        - asset: fonts/Kodchasan-Light.ttf
+          weight: 300
+        - asset: fonts/Kodchasan-Medium.ttf
+          weight: 500
+        - asset: fonts/Kodchasan-SemiBold.ttf
+          weight: 600
